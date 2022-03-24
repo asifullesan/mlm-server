@@ -18,8 +18,11 @@ app.use(fileUpload());
 
 
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.mfooq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.8djb4.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true});
+
+
 
 
 
@@ -33,6 +36,8 @@ async function run() {
         // const usersCollection = database.collection('users');
         const clientrequestCollection = database.collection('client-request');
         const complainCollection = database.collection('complain');
+        const contactCollection = database.collection('contact');
+        const wicCollection = database.collection('wic');
 
 
 
@@ -48,6 +53,40 @@ async function run() {
         app.post('/complain', async (req, res) => {
             const complainItem = req.body;
             const result = await complainCollection.insertOne(complainItem)
+            res.json(result);
+        })
+
+
+
+
+        // contact data
+
+        app.get('/contact', async (req, res) => {
+            const cursor = contactCollection.find({});
+            const contact = await cursor.toArray();
+            res.send(contact);
+        })
+
+        app.post('/contact', async (req, res) => {
+            const contactItem = req.body;
+            const result = await contactCollection.insertOne(contactItem)
+            res.json(result);
+        })
+
+
+
+
+        // wic data
+
+        app.get('/wic', async (req, res) => {
+            const cursor = wicCollection.find({});
+            const wic = await cursor.toArray();
+            res.send(wic);
+        })
+
+        app.post('/wic', async (req, res) => {
+            const wicItem = req.body;
+            const result = await wicCollection.insertOne(wicItem)
             res.json(result);
         })
 
@@ -75,7 +114,7 @@ async function run() {
         // })
 
 
-        // teams data
+        // client req data
 
         app.post('/client-request', async (req, res) => {
             const accountType = req.body.accountType;
@@ -149,7 +188,7 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('mlm server')
+    res.send('sd-one server')
 });
 
 app.listen(port, () => {
